@@ -18,55 +18,54 @@ typedef struct{
     const char name[10];
 }menuItem;
 
-#define NULL_ENTRY Null_Menu
-
 menuItem* selectedMenuItem;
 
-enum {Menu_1 = 1, Menu_2, Menu_3, Menu_4};
+enum {Null_Menu = 0, Menu_1, Menu_2, Menu_3, Menu_4};
 
-#define prepareMenuItem(menuName, name)\
-        menuItem menuName PROGMEM = {(void*)0, (void*)0, (void*)0, (void*)0, {name}};
+#define prepareMenuItem(name, previous, next, parent, child)\
+        {(void*)next, (void*)previous, (void*)parent, (void*)child, {name}}
 
-#define setMenuItem(menuName, _previous, _next, _parent, _child)\
-        menuName.previous = &_previous;\
-        menuName.next = &_next;\
-        menuName.parent = &_parent;\
-        menuName.child = &_child;\
+const menuItem PROGMEM menu[] = {
+    prepareMenuItem(0x00, 0, 0, 0, 0),
+    prepareMenuItem("Menu_1", &menu[Null_Menu], &menu[Menu_2],0 ,0),
+    prepareMenuItem("Menu_2", &menu[Menu_1], &menu[Menu_3], 0 ,0),
+    prepareMenuItem("Menu_3", &menu[Menu_2], &menu[Null_Menu], 0 ,0)
+};
 
 #define PREVIOUS   ((menuItem*)pgm_read_word(&selectedMenuItem->Previous))
 #define NEXT       ((menuItem*)pgm_read_word(&selectedMenuItem->Next))
 #define PARENT     ((menuItem*)pgm_read_word(&selectedMenuItem->Parent))
 #define CHILD      ((menuItem*)pgm_read_word(&selectedMenuItem->Child))
-
-prepareMenuItem(Null_Menu, 0x00);
-
-    prepareMenuItem(setup11, "menu1");
-    prepareMenuItem(setup12, "menu2");
-    prepareMenuItem(setup13, "menu3");
-    prepareMenuItem(setup21, "menu4");
-
+//&(string_table[i]))
 
 void menuChange(menuItem* NewMenu)
 {
-	if ((void*)NewMenu == (void*)&NULL_ENTRY)
+	if ((void*)NewMenu == (void*)&menu[Null_Menu])
 	  return;
  
 	selectedMenuItem = NewMenu;
 }
 
 void initMenu(void) {
-	selectedMenuItem = (menuItem*)&setup11;
+	selectedMenuItem = (menuItem*)&menu[Menu_1];
+}
+
+void renderMenu(void) {
+	menuItem* tempMenu;
+	tempMenu = (menuItem*)pgm_read_word(&selectedMenuItem->parent);
+	if ((void*)tempMenu == (void*)&menu[Null_Menu]) {
+		Serial.println((const char *)PSTR("MENU:"));
+	} else {
+		Serial.println((const char *)tempMenu->name);
+	}
+	Serial.println((const char *)selectedMenuItem->name);
 }
 
 void setup(void) {
+    Serial.begin(5760);
     u8g2.begin();
-
-    setMenuItem(setup11, NULL_ENTRY, setup12, NULL_ENTRY, setup21);
-    setMenuItem(setup12, setup11, setup13, NULL_ENTRY, NULL_ENTRY);
-    setMenuItem(setup13, setup12, NULL_ENTRY, NULL_ENTRY, NULL_ENTRY);
-    setMenuItem(setup21, NULL_ENTRY, NULL_ENTRY, setup11, NULL_ENTRY);
-
     initMenu();
+    Serial.println((const char *)selectedMenuItem->name);
 }
 
 void loop(void) {
