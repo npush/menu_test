@@ -13,14 +13,14 @@
 const byte ROWS = 4;
 const byte COLS = 1;
 char keys[ROWS][COLS] = {
-{'1'},
-{'2'},
-{'3'},
-{'4'}
+    {'1'},
+    {'2'},
+    {'3'},
+    {'4'}
 };
 byte rowPins[ROWS] = {7, 6, 5, 4}; //connect to the row pinouts of the kpd
 byte colPins[COLS] = {3}; //connect to the column pinouts of the kpd
-Keypad kpd = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
+Keypad kpd = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
 
 U8G2_ST7920_128X64_F_HW_SPI u8g2(U8G2_R0, /* CS=*/ 10, /* reset=*/ 8);
