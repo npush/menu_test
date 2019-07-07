@@ -25,7 +25,8 @@ byte rowPins[ROWS] = {7, 6, 5, 4}; //connect to the row pinouts of the kpd
 byte colPins[COLS] = {3}; //connect to the column pinouts of the kpd
 Keypad kpd = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
-U8G2_ST7920_128X64_F_HW_SPI u8g2(U8G2_R0, /* CS=*/ 10, /* reset=*/ 8);
+//U8G2_ST7920_128X64_F_HW_SPI u8g2(U8G2_R0, /* CS=*/ 10, /* reset=*/ 8);
+U8G2_ST7920_128X64_2_HW_SPI u8g2(U8G2_R0, /* CS=*/ 10, /* reset=*/ 8);
 
 void renderMenu(uint8_t itemsToRender)
 {
@@ -36,6 +37,28 @@ void renderMenu(uint8_t itemsToRender)
 		Serial.println((const __FlashStringHelper*)tempMenu->name);
 	}
 	Serial.println((const __FlashStringHelper*)GET_NAME);
+}
+
+// this is the state machine, which will replace the do - while loop
+void draw_page(void) 
+{
+    static uint8_t is_next_page = 0;
+
+    // call to first page, if required
+    if ( is_next_page == 0 )
+    {
+        u8g2.firstPage();
+        is_next_page = 1;
+    }
+
+    // draw our screen
+    u8g2.setFont(u8g2_font_ncenB14_tr);
+    u8g2.drawStr(0,20,"Hello World!");
+
+    // call to next page
+    if ( u8g2.nextPage() == 0 ) {
+        is_next_page = 0;			// ensure, that first page is called
+    }  
 }
 
 void setup(void)
@@ -83,11 +106,20 @@ void loop(void)
         initMenu();
     }
 
-    u8g2.clearBuffer();
-    // code
-    u8g2.setFontDirection(0);
-    u8g2.setFont(u8g2_font_inb16_mf);
-    u8g2.drawStr(1,54, "U+0089");
-    u8g2.sendBuffer();
+    //u8g2.clearBuffer();
+    // //code
+    //u8g2.setFontDirection(0);
+    //u8g2.setFont(u8g2_font_inb16_mf);
+    //u8g2.drawStr(1,54, "U+0089");
+    //u8g2.sendBuffer();
     //delay(1000);
+
+    draw_page();
+
+    // u8g2.firstPage();
+    // do {
+    //     /* all graphics commands have to appear within the loop body. */    
+    //     u8g2.setFont(u8g2_font_ncenB14_tr);
+    //     u8g2.drawStr(0,20,"Hello World!");
+    // } while ( u8g2.nextPage() );
 }

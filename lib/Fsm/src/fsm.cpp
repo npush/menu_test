@@ -19,7 +19,7 @@ void doEvent(enum events e)
   
         return;
     }
-    (*(MKA*)pgm_read_word(&FSM_table[softState][e]))(e);
+    (*(MKA)pgm_read_word(&FSM_table[softState][e]))(e);
 }
 
 void initialF(enum events e)

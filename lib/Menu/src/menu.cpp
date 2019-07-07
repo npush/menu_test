@@ -14,7 +14,7 @@ volatile menuItem* selectedMenuItem;
 
 void initMenu(void)
 {
-    selectedMenuItem = (menuItem*)pgm_read_word(&menu[Menu_2]);
+    selectedMenuItem = (menuItem*)&menu[Menu_2];
 }
 
 volatile menuItem* getSelectedMenuItem(void)
@@ -29,7 +29,7 @@ menuItemIndex getSelectedMenuIndex(void)
 
 menuItem* getMenuItem(menuItemIndex index)
 {
-    return (menuItem*)pgm_read_word(&menu[index]);
+    return (menuItem*)&menu[index];
 }
 
 void setMenu(menuItem* NewMenu)
