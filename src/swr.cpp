@@ -28,16 +28,12 @@ Keypad kpd = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 //U8G2_ST7920_128X64_F_HW_SPI u8g2(U8G2_R0, /* CS=*/ 10, /* reset=*/ 8);
 U8G2_ST7920_128X64_2_HW_SPI u8g2(U8G2_R0, /* CS=*/ 10, /* reset=*/ 8);
 
-void renderMenu(uint8_t itemsToRender)
-{
-	menuItem* tempMenu = GET_PARENT;
-	if (isNullMenu(tempMenu)) {
-		Serial.println(F("MENU:"));
-	} else {
-		Serial.println((const __FlashStringHelper*)tempMenu->name);
-	}
-	Serial.println((const __FlashStringHelper*)GET_NAME);
-}
+uint8_t stringHeight = u8g2.getMaxCharHeight();
+uint8_t displayHeight = u8g2.getDisplayHeight();
+uint8_t displayWidth = u8g2.getDisplayWidth();
+uint8_t maxStrings = displayHeight / stringHeight;
+
+#define MAX_MENU_ITEMS 8
 
 // this is the state machine, which will replace the do - while loop
 void draw_page(void) 
@@ -45,8 +41,7 @@ void draw_page(void)
     static uint8_t is_next_page = 0;
 
     // call to first page, if required
-    if ( is_next_page == 0 )
-    {
+    if (is_next_page == 0) {
         u8g2.firstPage();
         is_next_page = 1;
     }
@@ -56,7 +51,7 @@ void draw_page(void)
     u8g2.drawStr(0,20,"Hello World!");
 
     // call to next page
-    if ( u8g2.nextPage() == 0 ) {
+    if (u8g2.nextPage() == 0) {
         is_next_page = 0;			// ensure, that first page is called
     }  
 }
@@ -64,6 +59,12 @@ void draw_page(void)
 void setup(void)
 {
     Serial.begin(57600);
+    //uint8_t menu_select_pin, 
+    //uint8_t menu_next_pin, 
+    //uint8_t menu_prev_pin, uint8_t 
+    //menu_up_pin = U8X8_PIN_NONE, 
+    //uint8_t menu_down_pin = U8X8_PIN_NONE, 
+    //uint8_t menu_home_pin = U8X8_PIN_NONE
     u8g2.begin();
     initMenu();
     // point to first array element in flash
@@ -86,23 +87,23 @@ void loop(void)
 // 1 -> menu 2 -> up 3 -> down 4 -> exit
 
     if (key == '1'){
-        doEvent(remap(key));
+        doEvent(menuKey);
         Serial.println((const __FlashStringHelper*)GET_NAME);
     }
 
     if (key == '2'){
-        doEvent(remap(key));
+        doEvent(upKey);
         setMenu(GET_NEXT);
         Serial.println((const __FlashStringHelper*)GET_NAME);
     }
 
     if (key == '3'){
-        doEvent(remap(key));
+        doEvent(downKey);
         setMenu(GET_PREVIOUS);
         Serial.println((const __FlashStringHelper*)GET_NAME);
     }
     if (key == '4'){
-        doEvent(remap(key));
+        doEvent(exitKey);
         initMenu();
     }
 

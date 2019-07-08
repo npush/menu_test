@@ -10,14 +10,14 @@ const menuItem PROGMEM menu[] = {
    prepareMenuItem("Menu_4", &menu[Menu_3], &menu[Null_Menu], &menu[Null_Menu], &menu[Null_Menu], Menu_4)
 };
 
-volatile menuItem* selectedMenuItem;
+menuItem* selectedMenuItem;
 
 void initMenu(void)
 {
     selectedMenuItem = (menuItem*)&menu[Menu_2];
 }
 
-volatile menuItem* getSelectedMenuItem(void)
+menuItem* getSelectedMenuItem(void)
 {
     return selectedMenuItem;
 }
@@ -54,4 +54,17 @@ bool isNullMenu(menuItem* menuItem)
  	}
 Serial.println("false");
      return false;
+}
+
+void renderMenu(uint8_t itemsToRender = 8)
+{
+    menuItem* tempMenu;
+    while (itemsToRender > 1) {
+        tempMenu = getSelectedMenuItem();
+        if (isNullMenu(tempMenu)) {
+		    return;
+	    }
+        Serial.println((const __FlashStringHelper*)tempMenu->name);
+        tempMenu = (menuItem*)pgm_read_word(&(tempMenu->next));
+    }
 }

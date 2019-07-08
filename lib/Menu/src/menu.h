@@ -21,6 +21,6 @@ typedef struct{
 
 void setMenu(menuItem* NewMenu);
 void initMenu(void);
-volatile menuItem* getSelectedMenuItem(void);
+menuItem* getSelectedMenuItem(void);
 menuItem* getMenuItem(char index);
 bool isNullMenu(menuItem* menuItem);

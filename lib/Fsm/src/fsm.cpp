@@ -43,16 +43,3 @@ void runFunctionF(enum events e)
     Serial.println("runFunctionF envent");
 
 }
-
-// 1 -> menu 2 -> up 3 -> down 4 -> exit
-events remap(char key)
-{
-    if (key == '1')
-        return menuKey;
-    if (key == '2')
-        return upKey;
-    if (key == '3')
-        return downKey;
-    if (key == '4')
-        return exitKey;
-}
