@@ -12,15 +12,15 @@ typedef struct{
 #define prepareMenuItem(name, previous, next, parent, child, id)\
        {(void*)previous, (void*)next, (void*)parent, (void*)child, {name}, id}
 
-#define GET_PREVIOUS   ((menuItem*)pgm_read_word(&(getSelectedMenuItem()->previous)))
-#define GET_NEXT       ((menuItem*)pgm_read_word(&(getSelectedMenuItem()->next)))
-#define GET_PARENT     ((menuItem*)pgm_read_word(&(getSelectedMenuItem()->parent)))
-#define GET_CHILD      ((menuItem*)pgm_read_word(&(getSelectedMenuItem()->child)))
-#define GET_NAME        ((const char *)&(getSelectedMenuItem()->name))
-#define GET_ID          ((menuItemIndex)pgm_read_byte(&(getSelectedMenuItem()->id)))
+#define GET_PREVIOUS(_menuItem) (menuItem*)pgm_read_word(&(_menuItem->previous)))
+#define GET_NEXT(_menuItem)     ((menuItem*)pgm_read_word(&(_menuItem->next)))
+#define GET_PARENT(_menuItem)   ((menuItem*)pgm_read_word(&(_menuItem->parent)))
+#define GET_CHILD(_menuItem)    ((menuItem*)pgm_read_word(&(_menuItem->child)))
+#define GET_NAME(_menuItem)     (&(_menuItem->name))
+#define GET_ID(_menuItem)       ((menuItemIndex)pgm_read_byte(&(_menuItem->id)))
 
-void setMenu(menuItem* NewMenu);
-void initMenu(void);
-menuItem* getSelectedMenuItem(void);
-menuItem* getMenuItem(char index);
-bool isNullMenu(menuItem* menuItem);
+enum menuItemIndex {Null_Menu = 0, Menu_1, Menu_2, Menu_3, Menu_4};
+
+menuItem* getMenuItem(menuItemIndex);
+bool isNullMenu(menuItem*);
+menuItem* renderMenu(uint8_t, menuItem*);

@@ -1,7 +1,6 @@
 #include "menu.h"
 
-enum menuItemIndex {Null_Menu = 0, Menu_1, Menu_2, Menu_3, Menu_4};
-// name, previous, next, parent, child
+// name, previous, next, parent, child, id
 const menuItem PROGMEM menu[] = {
    prepareMenuItem("root", 0, 0, 0, 0, Null_Menu),
    prepareMenuItem("Menu_1", &menu[Null_Menu], &menu[Menu_2], &menu[Null_Menu], &menu[Null_Menu], Menu_1),
@@ -10,39 +9,18 @@ const menuItem PROGMEM menu[] = {
    prepareMenuItem("Menu_4", &menu[Menu_3], &menu[Null_Menu], &menu[Null_Menu], &menu[Null_Menu], Menu_4)
 };
 
-menuItem* selectedMenuItem;
-
-void initMenu(void)
-{
-    selectedMenuItem = (menuItem*)&menu[Menu_2];
-}
-
-menuItem* getSelectedMenuItem(void)
-{
-    return selectedMenuItem;
-}
-
-menuItemIndex getSelectedMenuIndex(void)
-{
-    return (menuItemIndex)pgm_read_byte(&selectedMenuItem->id);
-}
-
+/*
+* Return pointer to menuItem
+*
+* @param menuItemIndex index
+*/
 menuItem* getMenuItem(menuItemIndex index)
 {
     return (menuItem*)&menu[index];
 }
 
-void setMenu(menuItem* NewMenu)
-{
-    if (isNullMenu(NewMenu)) {
-     
-      return;
-    }
-    selectedMenuItem = NewMenu;
-}
-
 /*
-* @param
+* @param menuItem menuItem
 * @return bool
 */
 bool isNullMenu(menuItem* menuItem)
@@ -56,15 +34,22 @@ Serial.println("false");
      return false;
 }
 
-void renderMenu(uint8_t itemsToRender = 8)
+menuItem* renderMenu(uint8_t itemsToRender = 8, menuItem* lastMenu = NULL)
 {
     menuItem* tempMenu;
-    while (itemsToRender > 1) {
-        tempMenu = getSelectedMenuItem();
-        if (isNullMenu(tempMenu)) {
-		    return;
-	    }
-        Serial.println((const __FlashStringHelper*)tempMenu->name);
-        tempMenu = (menuItem*)pgm_read_word(&(tempMenu->next));
+    int8_t idx = 0;
+    if (lastMenu == NULL) {
+        tempMenu = getMenuItem(Menu_1);
+    } else {
+        tempMenu = lastMenu;
     }
+    while (itemsToRender > 1) {
+        if (isNullMenu(tempMenu)) {
+		    return tempMenu;
+	    }
+        Serial.println((const __FlashStringHelper*)GET_NAME(tempMenu));
+        tempMenu = GET_NEXT(tempMenu);
+        itemsToRender--;
+    }
+    return tempMenu;
 }
