@@ -1,3 +1,5 @@
+#ifndef Fsm_h
+#define Fsm_h
 
 enum states{
     initial,
@@ -19,3 +21,5 @@ void initialF(enum events e);
 void displayMenuF(enum events e);
 void editParamF(enum events e);
 void runFunctionF(enum events e);
+
+#endif // !Fsm_h

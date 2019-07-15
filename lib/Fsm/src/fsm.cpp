@@ -24,35 +24,38 @@ void doEvent(enum events e)
 
 void initialF(enum events e)
 {
+    softState = initial;
     Serial.println("initil envent");
+    switch (e) {
+        default:
+            break;
+    }
 }
 
 void displayMenuF(enum events e)
 {
-    Serial.println("Menu display envent");
-
-    Serial.println("do print menu event");
-    
     softState = displayMenu;
+    Serial.println("Menu display envent");
     switch (e) {
         // Walk thrue menu
         case upKey:
             Serial.println("do UpKey event");
+            Serial.println("do print menu event");
             break;
         case downKey:
             Serial.println("do DownpKey event");
-            break;
-        case exitKey:
-            Serial.println("do ExitKey event");
-            softState = initial;
+            Serial.println("do print menu event");
             break;
         case menuKey:
             Serial.println("do menuDo event");
             // Enter in child menu
             
             // Edit param
+            //softState = editParam;
 
             // Perform menuFunction
+            //softState = runFunction;
+
             break;
         default:
             break;
@@ -61,18 +64,14 @@ void displayMenuF(enum events e)
 
 void editParamF(enum events e)
 {
-    Serial.println("editParamF envent");
     softState = editParam;
+    Serial.println("editParamF envent");
     switch (e) {
         case upKey:
             Serial.println("do UpKey event");
             break;
         case downKey:
             Serial.println("do DownpKey event");
-            break;
-        case exitKey:
-            Serial.println("do ExitKey event");
-            softState = displayMenu;
             break;
         case menuKey:
             Serial.println("do save param event");
@@ -85,14 +84,9 @@ void editParamF(enum events e)
 
 void runFunctionF(enum events e)
 {
-    Serial.println("runFunctionF envent");
     softState = runFunction;
+    Serial.println("runFunctionF envent");
     switch (e) {
-        case exitKey:
-            Serial.println("Exit to main menu");
-            softState = displayMenu;
-            break;
-        
         default:
             break;
     }

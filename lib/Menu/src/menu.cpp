@@ -2,12 +2,19 @@
 
 // name, previous, next, parent, child, id
 const menuItem PROGMEM menu[] = {
-   prepareMenuItem("root", 0, 0, 0, 0, Null_Menu),
-   prepareMenuItem("Menu_1", &menu[Null_Menu], &menu[Menu_2], &menu[Null_Menu], &menu[Null_Menu], Menu_1),
-   prepareMenuItem("Menu_2", &menu[Menu_1], &menu[Menu_3], &menu[Null_Menu], &menu[Null_Menu], Menu_2),
-   prepareMenuItem("Menu_3", &menu[Menu_2], &menu[Menu_4], &menu[Null_Menu], &menu[Null_Menu], Menu_3),
-   prepareMenuItem("Menu_4", &menu[Menu_3], &menu[Null_Menu], &menu[Null_Menu], &menu[Null_Menu], Menu_4)
+   prepareMenuItem("root", 0, 0, 0, 0, Null_Menu, MenuItem),
+   prepareMenuItem("Menu_1", &menu[Null_Menu], &menu[Menu_2], &menu[Null_Menu], &menu[Null_Menu], Menu_1, MenuItem),
+   prepareMenuItem("Menu_2", &menu[Menu_1], &menu[Menu_3], &menu[Null_Menu], &menu[Null_Menu], Menu_2, MenuItem),
+   prepareMenuItem("Menu_3", &menu[Menu_2], &menu[Menu_4], &menu[Null_Menu], &menu[Null_Menu], Menu_3, MenuItem),
+   prepareMenuItem("Menu_4", &menu[Menu_3], &menu[Null_Menu], &menu[Null_Menu], &menu[Null_Menu], Menu_4, MenuItem)
 };
+
+menuItem* selectedMenuItem = (menuItem*)&menu[Null_Menu];
+
+menuItem* getSelectedMenu()
+{
+    return selectedMenuItem;
+}
 
 /*
 * Return pointer to menuItem
@@ -61,6 +68,22 @@ void renderMenuItems(menuItem* sellectedMenu, void (*callBackFunc)(const char*),
             callBackFunc((const char*)GET_NAME(tmpMenu));
         }
         itemsToRender--;
+    }
+}
+
+uint8_t performMenuAction(menuItem* selectedItem)
+{
+    switch (GET_TYPE(selectedItem)) {
+    case MenuItem:
+        if (!isNullMenu(GET_CHILD(selectedItem))) {
+            selectedItem = GET_CHILD(selectedItem);
+        }
+        break;
+    case FunctionItem:
+        return GET_ID(selectedItem);
+        break;
+    default:
+        break;
     }
 }
 

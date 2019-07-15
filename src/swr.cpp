@@ -25,8 +25,6 @@ byte rowPins[ROWS] = {7, 6, 5, 4}; //connect to the row pinouts of the kpd
 byte colPins[COLS] = {3}; //connect to the column pinouts of the kpd
 Keypad kpd = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
-menuItem* selectedMenuItem;
-
 //U8G2_ST7920_128X64_F_HW_SPI u8g2(U8G2_R0, /* CS=*/ 10, /* reset=*/ 8);
 U8G2_ST7920_128X64_2_HW_SPI u8g2(U8G2_R0, /* CS=*/ 10, /* reset=*/ 8);
 
@@ -69,9 +67,6 @@ void setup(void)
     //uint8_t menu_home_pin = U8X8_PIN_NONE
     u8g2.begin();
     Serial.println("OK:");
-
-    selectedMenuItem = getMenuItem(Null_Menu);
-
     //#define FPSTR(pstr_pointer) (reinterpret_cast<const __FlashStringHelper *>(pstr_pointer))
     //Serial.println(FPSTR(&getSelectedMenuItem()->name));
 }
@@ -85,7 +80,7 @@ void loop(void)
 
     if (key == '1'){
         doEvent(menuKey);
-        Serial.println((const __FlashStringHelper*)GET_NAME(selectedMenuItem));
+        Serial.println((const __FlashStringHelper*)GET_NAME(getSelectedMenu()));
     }
 
     if (key == '2'){
