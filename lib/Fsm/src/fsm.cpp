@@ -30,16 +30,70 @@ void initialF(enum events e)
 void displayMenuF(enum events e)
 {
     Serial.println("Menu display envent");
+
+    Serial.println("do print menu event");
+    
+    softState = displayMenu;
+    switch (e) {
+        // Walk thrue menu
+        case upKey:
+            Serial.println("do UpKey event");
+            break;
+        case downKey:
+            Serial.println("do DownpKey event");
+            break;
+        case exitKey:
+            Serial.println("do ExitKey event");
+            softState = initial;
+            break;
+        case menuKey:
+            Serial.println("do menuDo event");
+            // Enter in child menu
+            
+            // Edit param
+
+            // Perform menuFunction
+            break;
+        default:
+            break;
+    }
 }
 
 void editParamF(enum events e)
 {
     Serial.println("editParamF envent");
+    softState = editParam;
+    switch (e) {
+        case upKey:
+            Serial.println("do UpKey event");
+            break;
+        case downKey:
+            Serial.println("do DownpKey event");
+            break;
+        case exitKey:
+            Serial.println("do ExitKey event");
+            softState = displayMenu;
+            break;
+        case menuKey:
+            Serial.println("do save param event");
+            break;
+        default:
+            break;
+    }
 
 }
 
 void runFunctionF(enum events e)
 {
     Serial.println("runFunctionF envent");
-
+    softState = runFunction;
+    switch (e) {
+        case exitKey:
+            Serial.println("Exit to main menu");
+            softState = displayMenu;
+            break;
+        
+        default:
+            break;
+    }
 }

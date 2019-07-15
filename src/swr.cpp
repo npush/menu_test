@@ -69,6 +69,9 @@ void setup(void)
     //uint8_t menu_home_pin = U8X8_PIN_NONE
     u8g2.begin();
     Serial.println("OK:");
+
+    selectedMenuItem = getMenuItem(Null_Menu);
+
     //#define FPSTR(pstr_pointer) (reinterpret_cast<const __FlashStringHelper *>(pstr_pointer))
     //Serial.println(FPSTR(&getSelectedMenuItem()->name));
 }
@@ -82,7 +85,7 @@ void loop(void)
 
     if (key == '1'){
         doEvent(menuKey);
-        Serial.println((const __FlashStringHelper*)GET_NAME);
+        Serial.println((const __FlashStringHelper*)GET_NAME(selectedMenuItem));
     }
 
     if (key == '2'){

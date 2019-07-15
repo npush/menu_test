@@ -12,7 +12,7 @@ typedef struct{
 #define prepareMenuItem(name, previous, next, parent, child, id)\
        {(void*)previous, (void*)next, (void*)parent, (void*)child, {name}, id}
 
-#define GET_PREVIOUS(_menuItem) (menuItem*)pgm_read_word(&(_menuItem->previous)))
+#define GET_PREVIOUS(_menuItem) ((menuItem*)pgm_read_word(&(_menuItem->previous)))
 #define GET_NEXT(_menuItem)     ((menuItem*)pgm_read_word(&(_menuItem->next)))
 #define GET_PARENT(_menuItem)   ((menuItem*)pgm_read_word(&(_menuItem->parent)))
 #define GET_CHILD(_menuItem)    ((menuItem*)pgm_read_word(&(_menuItem->child)))
@@ -23,4 +23,4 @@ enum menuItemIndex {Null_Menu = 0, Menu_1, Menu_2, Menu_3, Menu_4};
 
 menuItem* getMenuItem(menuItemIndex);
 bool isNullMenu(menuItem*);
-menuItem* renderMenu(uint8_t, menuItem*);
+void renderMenuItems(menuItem*, void (*callBackFunc)(const char*), uint8_t);

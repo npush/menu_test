@@ -34,22 +34,37 @@ Serial.println("false");
      return false;
 }
 
-menuItem* renderMenu(uint8_t itemsToRender = 8, menuItem* lastMenu = NULL)
+void renderMenuItems(menuItem* sellectedMenu, void (*callBackFunc)(const char*), uint8_t itemsToRender = 8)
 {
-    menuItem* tempMenu;
-    int8_t idx = 0;
-    if (lastMenu == NULL) {
-        tempMenu = getMenuItem(Menu_1);
+    menuItem* tmpMenu;
+    if (isNullMenu(sellectedMenu)) {
+        // init menu.
+        callBackFunc("Menu:");
+        tmpMenu = getMenuItem(Menu_1);
     } else {
-        tempMenu = lastMenu;
+        tmpMenu = GET_PREVIOUS(sellectedMenu);
+        if (isNullMenu(tmpMenu)) {
+            tmpMenu = sellectedMenu;
+        }
+            // Print Parent menu name
+        if (!isNullMenu(GET_PARENT(tmpMenu))) {
+            callBackFunc((const char*)GET_NAME(GET_PARENT(tmpMenu)));
+        }
     }
-    while (itemsToRender > 1) {
-        if (isNullMenu(tempMenu)) {
-		    return tempMenu;
-	    }
-        Serial.println((const __FlashStringHelper*)GET_NAME(tempMenu));
-        tempMenu = GET_NEXT(tempMenu);
+    while (!isNullMenu(GET_NEXT(tmpMenu)) && itemsToRender > 0) {
+        if(tmpMenu == sellectedMenu) {
+            callBackFunc("--->");
+            callBackFunc((const char*)GET_NAME(tmpMenu));
+            callBackFunc("--->");
+        } else
+        {
+            callBackFunc((const char*)GET_NAME(tmpMenu));
+        }
         itemsToRender--;
     }
-    return tempMenu;
+}
+
+void editParemetr()
+{
+    
 }
