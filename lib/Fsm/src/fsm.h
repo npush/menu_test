@@ -15,11 +15,12 @@ enum events{
     exitKey
 };
 
-void doEvent(enum events e);
+void setState(states);
+void doEvent(enum events);
 
-void initialF(enum events e);
-void displayMenuF(enum events e);
-void editParamF(enum events e);
-void runFunctionF(enum events e);
+void initialF(enum events);
+void displayMenuF(enum events);
+void editParamF(enum events);
+void runFunctionF(enum events);
 
 #endif // !Fsm_h

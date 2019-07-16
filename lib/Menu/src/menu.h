@@ -31,6 +31,6 @@ enum menuItemIndex {Null_Menu = 0, Menu_1, Menu_2, Menu_3, Menu_4};
 menuItem* getSelectedMenu();
 menuItem* getMenuItem(menuItemIndex);
 bool isNullMenu(menuItem*);
-void renderMenuItems(menuItem*, void (*callBackFunc)(const char*), uint8_t);
+void renderMenuItems(menuItem*, size_t (Serial::*p_println)(const __FlashStringHelper*), uint8_t);
 
 #endif // !Menu_h

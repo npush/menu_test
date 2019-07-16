@@ -41,12 +41,12 @@ Serial.println("false");
      return false;
 }
 
-void renderMenuItems(menuItem* sellectedMenu, void (*callBackFunc)(const char*), uint8_t itemsToRender = 8)
+void renderMenuItems(menuItem* sellectedMenu, Serial *callBackFunc, uint8_t itemsToRender = 4)
 {
     menuItem* tmpMenu;
     if (isNullMenu(sellectedMenu)) {
         // init menu.
-        callBackFunc("Menu:");
+        callBackFunc((const __FlashStringHelper*)"Menu:");
         tmpMenu = getMenuItem(Menu_1);
     } else {
         tmpMenu = GET_PREVIOUS(sellectedMenu);
@@ -55,17 +55,17 @@ void renderMenuItems(menuItem* sellectedMenu, void (*callBackFunc)(const char*),
         }
             // Print Parent menu name
         if (!isNullMenu(GET_PARENT(tmpMenu))) {
-            callBackFunc((const char*)GET_NAME(GET_PARENT(tmpMenu)));
+            callBackFunc((const __FlashStringHelper*)GET_NAME(GET_PARENT(tmpMenu)));
         }
     }
     while (!isNullMenu(GET_NEXT(tmpMenu)) && itemsToRender > 0) {
         if(tmpMenu == sellectedMenu) {
-            callBackFunc("--->");
-            callBackFunc((const char*)GET_NAME(tmpMenu));
-            callBackFunc("--->");
+            callBackFunc((const __FlashStringHelper*)"--->");
+            callBackFunc((const __FlashStringHelper*)GET_NAME(tmpMenu));
+            callBackFunc((const __FlashStringHelper*)"--->");
         } else
         {
-            callBackFunc((const char*)GET_NAME(tmpMenu));
+            callBackFunc((const __FlashStringHelper*)GET_NAME(tmpMenu));
         }
         itemsToRender--;
     }
@@ -89,5 +89,5 @@ uint8_t performMenuAction(menuItem* selectedItem)
 
 void editParemetr()
 {
-    
+
 }
