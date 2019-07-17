@@ -26,7 +26,7 @@ void loop(void)
 
     if (key == '1'){
         doEvent(menuKey);
-        Serial.println((const __FlashStringHelper*)GET_NAME(getSelectedMenu()));
+        //Serial.println((const __FlashStringHelper*)GET_NAME(getSelectedMenu()));
     }
 
     if (key == '2'){
@@ -71,17 +71,19 @@ void initialF(enum events e)
 void displayMenuF(enum events e)
 {
     setState(displayMenu);
-    Serial.println("Menu display envent");
     switch (e) {
         // Walk thrue menu
         case upKey:
             //Serial.println("do UpKey event");
             //Serial.println("do print menu event");
-            renderMenuItems(getSelectedMenu(), Serial::*println);
+            setMenu(GET_NEXT(getSelectedMenu()));
+            renderMenuItems(getSelectedMenu(), 4);
             break;
         case downKey:
-            Serial.println("do DownpKey event");
-            Serial.println("do print menu event");
+            //Serial.println("do DownpKey event");
+            //Serial.println("do print menu event");
+            setMenu(GET_PREVIOUS(getSelectedMenu()));
+            renderMenuItems(getSelectedMenu(), 4);
             break;
         case menuKey:
             Serial.println("do menuDo event");
@@ -127,4 +129,41 @@ void runFunctionF(enum events e)
         default:
             break;
     }
+}
+
+void renderMenuItems(const menuItem* sellectedMenu, uint8_t itemsToRender = 4)
+{
+    menuItem* tmpMenu;
+    if (isNullMenu(sellectedMenu)) {
+        // init menu.
+        Serial.println(F("Menu:"));
+        tmpMenu = getMenuItem(Menu_1);
+        //@ todo remove
+        //setMenu(tmpMenu);
+    } else {
+        tmpMenu = GET_PREVIOUS(sellectedMenu);
+        if (isNullMenu(tmpMenu)) {
+            tmpMenu = sellectedMenu;
+        }
+            // Print Parent menu name
+        if (!isNullMenu(GET_PARENT(tmpMenu))) {
+            Serial.println((const __FlashStringHelper*)GET_NAME(GET_PARENT(tmpMenu)));
+        }
+    }
+    while (!isNullMenu(tmpMenu) && itemsToRender > 0) {
+        if(tmpMenu == sellectedMenu) {
+            Serial.print(F("--->"));
+            Serial.println((const __FlashStringHelper*)GET_NAME(tmpMenu));
+        } else
+        {
+            Serial.println((const __FlashStringHelper*)GET_NAME(tmpMenu));
+        }
+        itemsToRender--;
+        tmpMenu = GET_NEXT(tmpMenu);
+    }
+}
+
+void callMenu(*menuItem tmpMenu)
+{
+
 }

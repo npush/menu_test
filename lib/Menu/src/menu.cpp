@@ -1,6 +1,6 @@
 #include "menu.h"
 
-// name, previous, next, parent, child, id
+//                  name,       previous,       next,               parent,             child,      id
 const menuItem PROGMEM menu[] = {
    prepareMenuItem("root", 0, 0, 0, 0, Null_Menu, MenuItem),
    prepareMenuItem("Menu_1", &menu[Null_Menu], &menu[Menu_2], &menu[Null_Menu], &menu[Null_Menu], Menu_1, MenuItem),
@@ -14,6 +14,14 @@ menuItem* selectedMenuItem = (menuItem*)&menu[Null_Menu];
 menuItem* getSelectedMenu()
 {
     return selectedMenuItem;
+}
+
+void setMenu(menuItem* tempMenu)
+{
+    if (isNullMenu(tempMenu)) {
+        return;
+    }
+    selectedMenuItem = tempMenu;
 }
 
 /*
@@ -32,44 +40,13 @@ menuItem* getMenuItem(menuItemIndex index)
 */
 bool isNullMenu(menuItem* menuItem)
 {
-    Serial.println((int) menuItem, HEX);
     if (menuItem == getMenuItem(Null_Menu)) {
-        Serial.println("true");
  		return true;
  	}
-Serial.println("false");
      return false;
 }
 
-void renderMenuItems(menuItem* sellectedMenu, Serial *callBackFunc, uint8_t itemsToRender = 4)
-{
-    menuItem* tmpMenu;
-    if (isNullMenu(sellectedMenu)) {
-        // init menu.
-        callBackFunc((const __FlashStringHelper*)"Menu:");
-        tmpMenu = getMenuItem(Menu_1);
-    } else {
-        tmpMenu = GET_PREVIOUS(sellectedMenu);
-        if (isNullMenu(tmpMenu)) {
-            tmpMenu = sellectedMenu;
-        }
-            // Print Parent menu name
-        if (!isNullMenu(GET_PARENT(tmpMenu))) {
-            callBackFunc((const __FlashStringHelper*)GET_NAME(GET_PARENT(tmpMenu)));
-        }
-    }
-    while (!isNullMenu(GET_NEXT(tmpMenu)) && itemsToRender > 0) {
-        if(tmpMenu == sellectedMenu) {
-            callBackFunc((const __FlashStringHelper*)"--->");
-            callBackFunc((const __FlashStringHelper*)GET_NAME(tmpMenu));
-            callBackFunc((const __FlashStringHelper*)"--->");
-        } else
-        {
-            callBackFunc((const __FlashStringHelper*)GET_NAME(tmpMenu));
-        }
-        itemsToRender--;
-    }
-}
+
 
 uint8_t performMenuAction(menuItem* selectedItem)
 {
