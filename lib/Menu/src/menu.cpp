@@ -63,8 +63,3 @@ uint8_t performMenuAction(menuItem* selectedItem)
             break;
     }
 }
-
-void editParemetr()
-{
-
-}

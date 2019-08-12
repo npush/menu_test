@@ -18,24 +18,24 @@ void setup(void)
 
 void loop(void)
 {
-
+    // 1 -> menu 2 -> up 3 -> down 4 -> exit
     char key = kpd.getKey();
-
-// 1 -> menu 2 -> up 3 -> down 4 -> exit
-
-    if (key == '1'){
-        doEvent(menuKey);
+    switch (key)
+    {
+    case '1':
+        doEvent(menuKey, kpd.isPressed(key));
         //Serial.println((const __FlashStringHelper*)GET_NAME(getSelectedMenu()));
-    }
-
-    if (key == '2'){
-        doEvent(upKey);
-    }
-
-    if (key == '3'){
-        doEvent(downKey);
-    }
-    if (key == '4'){
-        doEvent(exitKey);
+        break;
+    case '2':
+        doEvent(upKey, kpd.isPressed(key));
+        break;
+    case '3':
+        doEvent(downKey, kpd.isPressed(key));
+        break;
+    case '4':
+        doEvent(exitKey, kpd.isPressed(key));
+        break;
+    default:
+        break;
     }
 }

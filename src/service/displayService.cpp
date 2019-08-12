@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "displayService.h"
 
 #include "menu.h"
 

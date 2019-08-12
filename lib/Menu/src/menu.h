@@ -33,5 +33,6 @@ menuItem* getMenuItem(menuItemIndex);
 bool isNullMenu(menuItem*);
 void renderMenuItems(menuItem*, uint8_t);
 void setMenu(menuItem*);
+uint8_t performMenuAction(menuItem*);
 
 #endif // !Menu_h

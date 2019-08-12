@@ -1,13 +1,15 @@
 #include <Arduino.h>
 #include "fsm.h"
+#include "menu.h"
+#include "display.h"
 
-typedef void (*MKA)(enum events, void (*f)());
+typedef void (*MKA)(enum events, bool keyState);
 
 const MKA PROGMEM FSM_table[4][4] = {
     //menuKey  upKey downKey exitKey
-    {&displayMenuF, NULL, NULL, NULL},   // initial
-    {&displayMenuF, &displayMenuF, &displayMenuF, &initialF},//displayMenu
-    {&editParamF, &editParamF, &editParamF, &displayMenuF},  //editParam
+    {&showMenuF, NULL, NULL, NULL},   // initial
+    {&showMenuF, &showMenuF, &showMenuF, &initialF},//displayMenu
+    {&editParamF, &editParamF, &editParamF, &showMenuF},  //editParam
     {NULL, NULL, NULL, &initialF} //runFunction
 };
 
@@ -18,43 +20,85 @@ void setState(states newState)
     softState = newState;
 }
 
-void doEvent(enum events e)
+bool isNewState(states newState)
+{
+    if (softState != newState) {
+        return true;
+    }
+
+    return false;
+}
+
+void doEvent(enum events e, bool keyState)
 {
     if (pgm_read_word(&FSM_table[softState][e]) == NULL) {
   
         return;
     }
-    (*(MKA)pgm_read_word(&FSM_table[softState][e]))(e);
+    (*(MKA)pgm_read_word(&FSM_table[softState][e]))(e, keyState);
 }
-
-void initialF(enum events e, void (*f)())
+// Call initilization fuictions
+void initialF(enum events e, bool keyState)
 {
-    setState(initial);
     Serial.println("initil envent");
     switch (e) {
         default:
             break;
     }
+    setState(idle);
 }
 
-void displayMenuF(enum events e)
+void idleF(enum events e, bool keyState)
+{
+    setState(idle);
+    Serial.println("idel envent");
+}
+
+void showMenuF(enum events e, bool keyState)
 {
     setState(displayMenu);
-    // call menu navigation rounine
-    switch (e)
-    {
-    case menuKey:
-        /* code */
-        editParamF(e);
-        break;
-    
-    default:
-        break;
-    }
-    
+    resolveMenuItemF(e, keyState);
+    //refresh display
+    renderMenuItems(getSelectedMenu(), 4);
 }
 
-void editParamF(enum events e)
+void resolveMenuItemF(enum events e, bool keyState)
+{
+    setState(resolveMenuItem);
+        // call menu navigation rounine
+    switch (e) {
+        // Walk thrue menu
+        case upKey:
+            //Serial.println("do UpKey event");
+            //Serial.println("do print menu event");
+            setMenu(GET_NEXT(getSelectedMenu()));
+            renderMenuItems(getSelectedMenu(), 4);
+            break;
+        case downKey:
+            //Serial.println("do DownpKey event");
+            //Serial.println("do print menu event");
+            setMenu(GET_PREVIOUS(getSelectedMenu()));
+            renderMenuItems(getSelectedMenu(), 4);
+            break;
+        case menuKey:
+            Serial.println("do menuDo event");
+            /* here you must call service */
+            performMenuAction(getSelectedMenu());
+            // Enter in child menu
+            
+            // Edit param
+            //softState = editParam;
+
+            // Perform menuFunction
+            //softState = runFunction;
+
+            break;
+        default:
+            break;
+    }
+}
+
+void editParamF(enum events e, bool keyState)
 {
     setState(editParam);
     Serial.println("editParamF envent");
@@ -71,10 +115,9 @@ void editParamF(enum events e)
         default:
             break;
     }
-
 }
 
-void runFunctionF(enum events e)
+void runFunctionF(enum events e, bool keyState)
 {
     setState(runFunction);
     Serial.println("runFunctionF envent");
