@@ -51,16 +51,16 @@ bool isNullMenu(menuItem* menuItem)
 uint8_t performMenuAction(menuItem* selectedItem)
 {
     switch (GET_TYPE(selectedItem)) {
-    case MenuItem:
-        if (!isNullMenu(GET_CHILD(selectedItem))) {
-            selectedItem = GET_CHILD(selectedItem);
-        }
-        break;
-    case FunctionItem:
-        return GET_ID(selectedItem);
-        break;
-    default:
-        break;
+        case MenuItem:
+            if (!isNullMenu(GET_CHILD(selectedItem))) {
+                selectedItem = GET_CHILD(selectedItem);
+            }
+            break;
+        case FunctionItem:
+            return GET_ID(selectedItem);
+            break;
+        default:
+            break;
     }
 }
 

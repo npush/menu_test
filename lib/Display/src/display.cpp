@@ -51,3 +51,21 @@ void draw_page(void (*callBack)(void))
         is_next_page = 0;			// ensure, that first page is called
     }  
 }
+
+
+    //u8g2.clearBuffer();
+    // //code
+    //u8g2.setFontDirection(0);
+    //u8g2.setFont(u8g2_font_inb16_mf);
+    //u8g2.drawStr(1,54, "U+0089");
+    //u8g2.sendBuffer();
+    //delay(1000);
+
+    //draw_page();
+
+    // u8g2.firstPage();
+    // do {
+    //     /* all graphics commands have to appear within the loop body. */    
+    //     u8g2.setFont(u8g2_font_ncenB14_tr);
+    //     u8g2.drawStr(0,20,"Hello World!");
+    // } while ( u8g2.nextPage() );

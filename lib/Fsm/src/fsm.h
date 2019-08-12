@@ -18,9 +18,9 @@ enum events{
 void setState(states);
 void doEvent(enum events);
 
-void initialF(enum events);
-void displayMenuF(enum events);
-void editParamF(enum events);
-void runFunctionF(enum events);
+void initialF(enum events, void (*f)());
+void displayMenuF(enum events, void (*f)());
+void editParamF(enum events, void (*f)());
+void runFunctionF(enum events, void (*f)());
 
 #endif // !Fsm_h
