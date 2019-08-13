@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-enum menuItemType {MenuItem, FunctionItem};
+enum menuItemType {MenuItem, FunctionItem, PropertyItem};
 
 typedef struct{
     void *previous;
@@ -33,6 +33,6 @@ menuItem* getMenuItem(menuItemIndex);
 bool isNullMenu(menuItem*);
 void renderMenuItems(menuItem*, uint8_t);
 void setMenu(menuItem*);
-uint8_t performMenuAction(menuItem*);
+menuItemType performMenuAction(menuItem*);
 
 #endif // !Menu_h

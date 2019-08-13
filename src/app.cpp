@@ -36,6 +36,7 @@ void loop(void)
         doEvent(exitKey, kpd.isPressed(key));
         break;
     default:
+        // dispatch events?
         break;
     }
 }

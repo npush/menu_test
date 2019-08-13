@@ -56,46 +56,36 @@ void idleF(enum events e, bool keyState)
 
 void showMenuF(enum events e, bool keyState)
 {
-    setState(displayMenu);
-    resolveMenuItemF(e, keyState);
-    //refresh display
-    renderMenuItems(getSelectedMenu(), 4);
-}
-
-void resolveMenuItemF(enum events e, bool keyState)
-{
-    setState(resolveMenuItem);
-        // call menu navigation rounine
-    switch (e) {
-        // Walk thrue menu
-        case upKey:
-            //Serial.println("do UpKey event");
-            //Serial.println("do print menu event");
-            setMenu(GET_NEXT(getSelectedMenu()));
-            renderMenuItems(getSelectedMenu(), 4);
+    char itemType;
+    // if first time in state
+    if (softState != displayMenu) {
+        setState(displayMenu);
+        renderMenuItems(getSelectedMenu(), 4);
+        return;
+    }
+    
+    itemType = resolveMenuItemF(e, keyState);
+    switch (itemType) {
+        case MenuItem:
+            /* code */
+            //setNext();
             break;
-        case downKey:
-            //Serial.println("do DownpKey event");
-            //Serial.println("do print menu event");
-            setMenu(GET_PREVIOUS(getSelectedMenu()));
-            renderMenuItems(getSelectedMenu(), 4);
+        case PropertyItem:
+            setState(editParam);
+            // emmit event Edit Params (e)
+            /* code */
             break;
-        case menuKey:
-            Serial.println("do menuDo event");
-            /* here you must call service */
-            performMenuAction(getSelectedMenu());
-            // Enter in child menu
-            
-            // Edit param
-            //softState = editParam;
-
-            // Perform menuFunction
-            //softState = runFunction;
-
+        case FunctionItem:
+            setState(runFunction);
+            // emmit event Run Function (e, parametr)
+            /* code */
             break;
         default:
             break;
     }
+
+    //refresh display
+    renderMenuItems(getSelectedMenu(), 4);
 }
 
 void editParamF(enum events e, bool keyState)
@@ -122,6 +112,41 @@ void runFunctionF(enum events e, bool keyState)
     setState(runFunction);
     Serial.println("runFunctionF envent");
     switch (e) {
+        default:
+            break;
+    }
+}
+
+// private function
+menuItemType resolveMenuItemF(enum events e, bool keyState)
+{
+    setState(resolveMenuItem);
+        // call menu navigation rounine
+    switch (e) {
+        // Walk thrue menu
+        case upKey:
+            //Serial.println("do UpKey event");
+            //Serial.println("do print menu event");
+            setMenu(GET_NEXT(getSelectedMenu()));
+            break;
+        case downKey:
+            //Serial.println("do DownpKey event");
+            //Serial.println("do print menu event");
+            setMenu(GET_PREVIOUS(getSelectedMenu()));
+            break;
+        case menuKey:
+            Serial.println("do menuDo event");
+            /* here you must call service */
+            performMenuAction(getSelectedMenu());
+            // Enter in child menu
+            
+            // Edit param
+            //softState = editParam;
+
+            // Perform menuFunction
+            //softState = runFunction;
+
+            break;
         default:
             break;
     }

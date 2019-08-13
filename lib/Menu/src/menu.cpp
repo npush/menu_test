@@ -48,7 +48,7 @@ bool isNullMenu(menuItem* menuItem)
 
 
 
-uint8_t performMenuAction(menuItem* selectedItem)
+menuItemType performMenuAction(menuItem* selectedItem)
 {
     switch (GET_TYPE(selectedItem)) {
         case MenuItem:
