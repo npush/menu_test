@@ -64,7 +64,7 @@ void showMenuF(enum events e, bool keyState)
         return;
     }
     
-    itemType = resolveMenuItemF(e, keyState);
+    itemType = resolveMenuItem(e, keyState);
     switch (itemType) {
         case MenuItem:
             /* code */
@@ -118,9 +118,8 @@ void runFunctionF(enum events e, bool keyState)
 }
 
 // private function
-menuItemType resolveMenuItemF(enum events e, bool keyState)
+menuItemType resolveMenuItem(enum events e, bool keyState)
 {
-    setState(resolveMenuItem);
         // call menu navigation rounine
     switch (e) {
         // Walk thrue menu

@@ -6,8 +6,7 @@ enum states{
     idle,
     displayMenu,
     editParam,
-    runFunction,
-    resolveMenuItem
+    runFunction
 };
 
 enum events{

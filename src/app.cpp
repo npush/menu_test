@@ -4,6 +4,7 @@
 #include "keyconfig.h"
 #include "fsm.h"
 #include "display.h"
+#include "timer-api.h"
 
 Keypad kpd = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
@@ -12,11 +13,22 @@ void setup(void)
     Serial.begin(57600);
     initDisplay();
     Serial.println("OK:");
+    /**
+    * freq: 20Hz
+    * period: 50ms
+    */
+    timer_init_ISR_20Hz(TIMER_DEFAULT);
     //#define FPSTR(pstr_pointer) (reinterpret_cast<const __FlashStringHelper *>(pstr_pointer))
     //Serial.println(FPSTR(&getSelectedMenuItem()->name));
 }
 
 void loop(void)
+{
+    // dispatch events?
+}
+
+
+void timer_handle_interrupts(int timer) 
 {
     // 1 -> menu 2 -> up 3 -> down 4 -> exit
     char key = kpd.getKey();
@@ -35,8 +47,4 @@ void loop(void)
     case '4':
         doEvent(exitKey, kpd.isPressed(key));
         break;
-    default:
-        // dispatch events?
-        break;
-    }
 }
