@@ -3,15 +3,16 @@
 
 #include <Arduino.h>
 
-typedef struct task
-{ 
-   void (*pTask)(void); // указатель на функцию
-   uint8_t ready; // флаг готовности задачи к запуску
+#include "fsm.h"
+
+typedef struct task { 
+   void (*pTask)(enum event);
+   uint8_t ready;
+   uint8_t inProgress;
 };
 
-void deleteTask (void (*taskFunc)(void));
-void addTask (void (*taskFunc)(void));
+void deleteTask (void (*taskFunction)(enum event));
+void addTask (void (*taskFunction)(enum event));
 void dispatchTask();
-
 
 #endif

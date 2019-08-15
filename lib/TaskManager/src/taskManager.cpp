@@ -18,7 +18,7 @@ void _addTask(void (*taskFunc)(void))
 }
 
 
-void deleteTask (void (*taskFunc)(void))
+void deleteTask (void (*taskFunc)(enum event))
 {
     for (byte i=0; i < queueTail; i++) {
         if(TaskQueue[i].pTask == taskFunc) {
@@ -32,7 +32,7 @@ void deleteTask (void (*taskFunc)(void))
    }
 }
 
-void addTask (void (*taskFunc)(void))
+void addTask (void (*taskFunc)(enum event))
 {
     // for(byte i = 0; i < queueTail; i++) {
     //     // update task
@@ -50,15 +50,14 @@ void addTask (void (*taskFunc)(void))
 
 void dispatchTask()
 {
-   void (*function) (void);
+   void (*function)(enum event);
    for (byte i=0; i < queueTail;) {
         if (TaskQueue[i].ready == 1) {
             function = TaskQueue[i].pTask;
         (*function)();
         deleteTask(TaskQueue[i].pTask);
         } else {
-           // флаг запуска не взведен
-            i++;    // переходим к следующей задаче в списке
+            i++;
         }
    }
  }

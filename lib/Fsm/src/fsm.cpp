@@ -7,11 +7,11 @@ typedef void (*MKA)(enum events, bool keyState);
 
 const MKA PROGMEM FSM_table[5][4] = {
     //menuKey  upKey downKey exitKey
-    {&showMenuF, NULL, NULL, NULL},   // initial
-    {&showMenuF, NULL, NULL, NULL},   // idle
-    {&showMenuF, &showMenuF, &showMenuF, &initialF},//displayMenu
-    {&editParamF, &editParamF, &editParamF, &showMenuF},  //editParam
-    {NULL, NULL, NULL, &initialF} //runFunction
+    {&showMenuF, NULL, NULL, NULL},                     // initial
+    {&showMenuF, NULL, NULL, NULL},                     // idle
+    {&showMenuF, &showMenuF, &showMenuF, &initialF},    //displayMenu
+    {&editParamF, &editParamF, &editParamF, &showMenuF},//editParam
+    {NULL, NULL, NULL, &initialF}                       //runFunction
 };
 
 volatile states softState = initial;

@@ -25,13 +25,7 @@ void setup(void)
 
 void loop(void)
 {
-    dispatchTask();
-}
-
-
-void timer_handle_interrupts(int timer) 
-{
-    // 1 -> menu 2 -> up 3 -> down 4 -> exit
+        // 1 -> menu 2 -> up 3 -> down 4 -> exit
     char key = kpd.getKey();
     switch (key) {
     case '1':
@@ -48,4 +42,13 @@ void timer_handle_interrupts(int timer)
         doEvent(exitKey, kpd.isPressed(key));
         break;
     }
+}
+
+/**
+ * Timer interrupt service routine, called with chosen period
+ * @param timer - timer id
+ */
+void timer_handle_interrupts(int timer) 
+{
+    dispatchTask();
 }
