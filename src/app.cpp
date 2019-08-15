@@ -5,6 +5,7 @@
 #include "fsm.h"
 #include "display.h"
 #include "timer-api.h"
+#include "taskManager.h"
 
 Keypad kpd = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
@@ -24,7 +25,7 @@ void setup(void)
 
 void loop(void)
 {
-    // dispatch events?
+    dispatchTask();
 }
 
 
@@ -32,8 +33,7 @@ void timer_handle_interrupts(int timer)
 {
     // 1 -> menu 2 -> up 3 -> down 4 -> exit
     char key = kpd.getKey();
-    switch (key)
-    {
+    switch (key) {
     case '1':
         doEvent(menuKey, kpd.isPressed(key));
         //Serial.println((const __FlashStringHelper*)GET_NAME(getSelectedMenu()));
@@ -47,4 +47,5 @@ void timer_handle_interrupts(int timer)
     case '4':
         doEvent(exitKey, kpd.isPressed(key));
         break;
+    }
 }

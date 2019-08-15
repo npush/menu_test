@@ -57,7 +57,7 @@ menuItemType performMenuAction(menuItem* selectedItem)
             }
             break;
         case FunctionItem:
-            return GET_ID(selectedItem);
+            //return GET_ID(selectedItem);
             break;
         default:
             break;

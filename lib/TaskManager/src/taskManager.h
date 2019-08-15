@@ -5,8 +5,13 @@
 
 typedef struct task
 { 
-   void (*pFunc) (void); // указатель на функцию
-   uint8_t run; // флаг готовности задачи к запуску
+   void (*pTask)(void); // указатель на функцию
+   uint8_t ready; // флаг готовности задачи к запуску
 };
+
+void deleteTask (void (*taskFunc)(void));
+void addTask (void (*taskFunc)(void));
+void dispatchTask();
+
 
 #endif

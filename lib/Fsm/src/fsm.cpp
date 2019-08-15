@@ -1,13 +1,14 @@
 #include <Arduino.h>
 #include "fsm.h"
 #include "menu.h"
-#include "display.h"
+#include "taskManager.h"
 
 typedef void (*MKA)(enum events, bool keyState);
 
-const MKA PROGMEM FSM_table[4][4] = {
+const MKA PROGMEM FSM_table[5][4] = {
     //menuKey  upKey downKey exitKey
     {&showMenuF, NULL, NULL, NULL},   // initial
+    {&showMenuF, NULL, NULL, NULL},   // idle
     {&showMenuF, &showMenuF, &showMenuF, &initialF},//displayMenu
     {&editParamF, &editParamF, &editParamF, &showMenuF},  //editParam
     {NULL, NULL, NULL, &initialF} //runFunction
@@ -60,7 +61,8 @@ void showMenuF(enum events e, bool keyState)
     // if first time in state
     if (softState != displayMenu) {
         setState(displayMenu);
-        renderMenuItems(getSelectedMenu(), 4);
+        addTask(renderMenuItems(getSelectedMenu(), 4));
+        //renderMenuItems(getSelectedMenu(), 4);
         return;
     }
     
